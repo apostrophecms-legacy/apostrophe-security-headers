@@ -1,0 +1,19 @@
+{
+  "name": "apostrophe-security-headers",
+  "version": "1.0.0-beta.1",
+  "description": "Send security headers such as Strict-Transport-Security in a way compatible with the needs of Apostrophe 2.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apostrophecms/apostrophe-security-headers.git"
+  },
+  "author": "Apostrophe Technologies",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apostrophecms/apostrophe-security-headers/issues"
+  },
+  "homepage": "https://github.com/apostrophecms/apostrophe-security-headers#readme"
+}
