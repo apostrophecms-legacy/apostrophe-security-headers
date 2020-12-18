@@ -117,3 +117,4 @@ You may set any of the standard policy options above to `false` to disable them.
 
 Note that the `HOSTS` wildcard is automaticalably replaced with a list of hosts including any `baseUrl` host, workflow hostnames for specific locales, CDN hosts from your uploadfs configuration, and `self`. Use of this wildcard is recommended as Apostrophe pushes assets to Amazon S3, CDNs, etc. when configured to do so, including scripts and stylesheets.
 
+> You may override the normal list of hosts for `HOSTS` by setting the `legitimateHosts` option to an array of strings. You could also extend the `legitimateHosts` method of this module at project level.
