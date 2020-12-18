@@ -76,9 +76,7 @@ module.exports = {
               continue;
             }
             if (policies[key]) {
-              console.log(`appending to ${key}`);
               policies[key] += ` ${val}`;
-              console.log(policies[key]);
             } else {
               policies[key] = val;
             }
@@ -90,8 +88,6 @@ module.exports = {
           // spread over different policies like defaultPolicies and googleFontsPolicies
           const words = val.split(/\s+/);
           const newWords = [];
-          console.log(key);
-          console.log(words);
           for (const word of words) {
             if (!newWords.includes(word)) {
               newWords.push(word);
@@ -99,7 +95,6 @@ module.exports = {
           }
           flatPolicies.push(`${key} ${newWords.join(' ')}`);
         }
-        console.log('>>', flatPolicies);
         flatPolicies = flatPolicies.map(policy => policy.replace(/HOSTS/g, hostsString));
         self.securityHeaders['Content-Security-Policy'] = flatPolicies.join('; ');
       } else if (self.options['Content-Security-Policy']) {
