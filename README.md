@@ -63,55 +63,61 @@ Here are the headers that are sent by default, with their default values:
   'Referrer-Policy': 'same-origin',
   // `true` means it should be computed according to the rules below.
   // You may also pass your own string, or `false` to not send this header.
-  'Content-Security-Policy': true,
-  // All options ending in "Policies" are merged together as Content-Security-Policy
-  // rules like those below. You can set any of these to `false` to block them,
-  // or introduce your own like "customPolicies".
+  // The `policies` option and all of its sub-options are ignored unless
+  // `Content-Security-Policy` is `true`.
   //
-  // Note the HOSTS wildcard which matches all expected hosts, including CDN hosts
-  // and workflow hostnames known to Apostrophe, as well as `self`.
+  // You do not have to copy and paste this entire example.
+  // The sub-options you specify for `policies` are intelligently merged
+  // with the defaults you see below. Any sub-option you specify explicitly at
+  // project level overrides all of the default settings shown below for that
+  // sub-option; you may set one to `false` to completely
+  // disable it. You may also introduce entirely new sub-options,
+  // which will also be honored.
   //
-  // Policies of the same type from different options are merged, with the largest set of
-  // keywords and hosts enabled. This is done because browsers do not support more than one
-  // style-src policy, for example, but do support specifying several hosts in one policy.
+  // Policies of the same type from different sub-options are merged, with
+  // the largest set of keywords and hosts enabled. This is done because
+  // browsers do not support more than one style-src policy, for example, but
+  // do support specifying several hosts.
+  //
+  // Note the HOSTS wildcard which matches all expected hosts including CDN hosts
+  // and workflow hostnames.
 
-  defaultPolicies: {
-    'default-src': `HOSTS`,
-    'style-src': `'unsafe-inline' HOSTS`,
-    'script-src': `'unsafe-inline' 'unsafe-eval' HOSTS`,
-    'font-src': `HOSTS`,
-    'frame-src': `'self'`
-  },
+  policies: {
+    general: {
+      'default-src': `HOSTS`,
+      'style-src': `'unsafe-inline' HOSTS`,
+      'script-src': `'unsafe-inline' 'unsafe-eval' HOSTS`,
+      'font-src': `HOSTS`,
+      'frame-src': `'self'`
+    },
 
-  // Set this option to false if you wish to forbid google fonts
-  googleFontsPolicies: {
-    'style-src': 'fonts.googleapis.com',
-    'font-src': 'fonts.gstatic.com'
-  },
+    // Set this sub-option to false if you wish to forbid google fonts
+    googleFonts: {
+      'style-src': 'fonts.googleapis.com',
+      'font-src': 'fonts.gstatic.com'
+    },
 
-  // Set this option to false if you do not plan to embed youtube video.
-  // Note this will break the Apostrophe video widget
-  oembedPolicies: {
-    'frame-src': '*.youtube.com *.vimeo.com'
-  },
+    oembed: {
+      'frame-src': '*.youtube.com *.vimeo.com'
+    },
 
-  // Set this option to false if you are not interested in Google Analytics
-  // or Google Tag Manager
-  analyticsPolicies: {
-    'default-src': '*.google-analytics.com *.doubleclick.net',
-    // Note that use of google tag manager by definition brings in scripts from
-    // more third party sites and you will need to add policies for them
-    'script-src': '*.google-analytics.com *.doubleclick.net *.googletagmanager.com'
+    analytics: {
+      'default-src': '*.google-analytics.com *.doubleclick.net',
+      // Note that use of google tag manager by definition brings in scripts from
+      // more third party sites and you will need to add policies for them
+      'script-src': '*.google-analytics.com *.doubleclick.net *.googletagmanager.com',
+    }  
   }
 ```
 
 ## Custom Policies
 
-You may add any number of custom policies. Any opotion to this module with a name ending in `Policies` is treated just like the standard cases above.
+You may add any number of custom policies. Any sub-option nested in your
+`policies` option is treated just like the standard cases above.
 
 ## Disabling Standard Policies
 
-You may set any of the standard policy options above to `false` to disable them.
+You may set any of the standard policy sub-options above to `false` to disable them.
 
 ## Hosts Wildcard
 

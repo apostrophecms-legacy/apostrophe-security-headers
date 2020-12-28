@@ -13,46 +13,40 @@ module.exports = {
   // origin. You can set this to `false` if you prefer cross-origin "Referer"
   // headers be sent. Apostrophe does not rely on them.
   'Referrer-Policy': 'same-origin',
-  // `true` means it should be computed according to the Policies options,
-  // shown below. You may also pass your own string, which disables all
-  // Policies options, or `false` to not send this header at all.
+  // `true` means it should be computed according to the `policies` option,
+  // which receives defaults from the `minimumPolicies` option. You may also
+  // pass your own string, which disables all `policies` sub-options and just
+  // sends that string, or `false` to not send this header at all.
   'Content-Security-Policy': true,
-  
-  // All options ending in "Policies" are pushed as Content-Security-Policy
-  // rules like those below. You can set any of these to `false` to block them,
-  // or introduce your own like "customPolicies".
-  //
-  // Note the HOSTS wildcard which matches all expected hosts including CDN hosts
-  // and workflow hostnames.
-  //
-  // Policies of the same type from different options are merged, with the largest set of
-  // keywords and hosts enabled. This is done because browsers do not support more than one
-  // style-src policy, for example, but do support specifying several hosts.
 
-  defaultPolicies: {
-    'default-src': `HOSTS`,
-    'style-src': `'unsafe-inline' HOSTS`,
-    'script-src': `'unsafe-inline' 'unsafe-eval' HOSTS`,
-    'font-src': `HOSTS`,
-    'frame-src': `'self'`
+  minimumPolicies: {
+    general: {
+      'default-src': `HOSTS`,
+      'style-src': `'unsafe-inline' HOSTS`,
+      'script-src': `'unsafe-inline' 'unsafe-eval' HOSTS`,
+      'font-src': `HOSTS`,
+      'frame-src': `'self'`
+    },
+
+    // Set this sub-option to false if you wish to forbid google fonts
+    googleFonts: {
+      'style-src': 'fonts.googleapis.com',
+      'font-src': 'fonts.gstatic.com'
+    },
+
+    oembed: {
+      'frame-src': '*.youtube.com *.vimeo.com'
+    },
+
+    analytics: {
+      'default-src': '*.google-analytics.com *.doubleclick.net',
+      // Note that use of google tag manager by definition brings in scripts from
+      // more third party sites and you will need to add policies for them
+      'script-src': '*.google-analytics.com *.doubleclick.net *.googletagmanager.com',
+    }
   },
 
-  // Set this option to false if you wish to forbid google fonts
-  googleFontsPolicies: {
-    'style-src': 'fonts.googleapis.com',
-    'font-src': 'fonts.gstatic.com'
-  },
-
-  oembedPolicies: {
-    'frame-src': '*.youtube.com *.vimeo.com'
-  },
-
-  analyticsPolicies: {
-    'default-src': '*.google-analytics.com *.doubleclick.net',
-    // Note that use of google tag manager by definition brings in scripts from
-    // more third party sites and you will need to add policies for them
-    'script-src': '*.google-analytics.com *.doubleclick.net *.googletagmanager.com',
-  },
+  policies: {},
 
   construct(self, options) {
     self.securityHeaders = {};
@@ -69,9 +63,10 @@ module.exports = {
       const hosts = self.legitimateHosts();
       if (self.options['Content-Security-Policy'] === true) {
         const hostsString = hosts.join(' ');
-        const policies = {};
-        Object.keys(self.options).filter(key => key.endsWith('Policies')).forEach(policy => {
-          for (const [ key, val ] of Object.entries(self.options[policy])) {
+        const policies = {}
+        const source = Object.assign({}, self.options.minimumPolicies, self.options.policies || {});
+        for (const policy of Object.values(source)) {
+          for (const [ key, val ] of Object.entries(policy)) {
             if (!policy) {
               continue;
             }
@@ -81,7 +76,7 @@ module.exports = {
               policies[key] = val;
             }
           }
-        });
+        }
         let flatPolicies = [];
         for (const [ key, val ] of Object.entries(policies)) {
           // Merge hosts and permissions from several 'style-src', 'default-src', etc.
