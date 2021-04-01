@@ -131,7 +131,7 @@ module.exports = {
     };
 
     self.parseHostname = function(url) {
-      const parsed = new URI(url);
+      const parsed = new URL(url);
       return parsed.hostname;
     };
 
