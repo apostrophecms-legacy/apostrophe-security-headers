@@ -1,6 +1,6 @@
 {
   "name": "apostrophe-security-headers",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.1",
   "description": "Send security headers such as Strict-Transport-Security in a way compatible with the needs of Apostrophe 2.x",
   "main": "index.js",
   "scripts": {
