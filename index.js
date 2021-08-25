@@ -53,7 +53,10 @@ module.exports = {
     self.on('apostrophe:modulesReady', 'determineSecurityHeaders', () => {
       const simple = [
         'Strict-Transport-Security',
-        'X-Frame-Options'
+        'X-Frame-Options',
+        'Referrer-Policy',
+        'Permissions-Policy',
+        'X-Content-Type-Options'
       ];
       for (const header of simple) {
         if (self.options[header]) {
