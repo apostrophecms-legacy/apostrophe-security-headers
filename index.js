@@ -119,8 +119,8 @@ module.exports = {
       if (workflow) {
         hosts = [
           ...hosts,
-          Object.values(workflow.options.hostnames),
-          Object.keys(workflow.options.defaultLocalesByHostname)
+          Object.values(workflow.options.hostnames || {}),
+          Object.keys(workflow.options.defaultLocalesByHostname || {})
         ];
       }
       const mediaUrl = self.apos.attachments.uploadfs.getUrl();
